@@ -7,6 +7,11 @@
     "email": "nerds@singly.com",
     "url": "https://singly.com/"
   },
+  "contributors": [{
+    "name": "Johnny Halife",
+    "email": "johnny@mural.ly",
+    "url": "https://murally.com/"
+  }],
   "repository": {
     "type": "git",
     "url": "git://github.com/Singly/passport-singly.git"
