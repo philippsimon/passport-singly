@@ -42,26 +42,7 @@ authenticate requests.
 For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
-    app.get('/auth/singly', function(req, res, next) {
-      passport.authenticate('singly', { service: req.param('service') },
-        function(err, user, info) {
-        if (err) {
-          return next(err);
-        }
-
-        if (!user) {
-          return res.redirect('/auth/singly?service=' + req.param('service'));
-        }
-
-        req.logIn(user, function(err) {
-          if (err) {
-            return next(err);
-          }
-
-          return res.redirect('/');
-        });
-      })(req, res, next);
-    });
+    app.get('/auth/singly', passport.authenticate('singly'));
 
     app.get('/auth/singly/callback',
       passport.authenticate('singly', { failureRedirect: '/login' }),

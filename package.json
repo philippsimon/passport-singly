@@ -1,12 +1,17 @@
 {
   "name": "passport-singly",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Singly authentication strategy for Passport.",
   "author": {
     "name": "Beau Gunderson",
     "email": "nerds@singly.com",
     "url": "https://singly.com/"
   },
+  "contributors": [{
+    "name": "Johnny Halife",
+    "email": "johnny@mural.ly",
+    "url": "https://murally.com/"
+  }],
   "repository": {
     "type": "git",
     "url": "git://github.com/Singly/passport-singly.git"
