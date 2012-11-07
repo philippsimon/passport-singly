@@ -1,11 +1,10 @@
 var vows = require('vows');
 var assert = require('assert');
-var util = require('util');
 var singly = require('passport-singly');
 
 vows.describe('passport-singly').addBatch({
   'module': {
-    'should report a version': function (x) {
+    'should report a version': function () {
       assert.isString(singly.version);
     }
   }
