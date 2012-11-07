@@ -42,7 +42,7 @@ authenticate requests.
 For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
-    app.get('/auth/singly', passport.authenticate('singly'));
+    app.get('/auth/singly/:service', passport.authenticate('singly'));
 
     app.get('/auth/singly/callback',
       passport.authenticate('singly', { failureRedirect: '/login' }),
