@@ -1,18 +1,17 @@
 var vows = require('vows');
 var assert = require('assert');
-var util = require('util');
 var url = require('url');
 
 var SinglyStrategy = require('passport-singly/strategy');
 
 vows.describe('SinglyStrategy').addBatch({
   'strategy': {
-    topic: function() {
+    topic: function () {
       return new SinglyStrategy({
         clientID: 'ABC123',
         clientSecret: 'secret'
       },
-      function() {});
+      function () {});
     },
 
     'should be named singly': function (strategy) {
@@ -32,8 +31,9 @@ vows.describe('SinglyStrategy').addBatch({
 
     'in the normal case': {
       topic: function (strategy) {
-        var mockRequest = {},
-            url;
+        var mockRequest = {
+          param: function () {}
+        };
 
         // Stub strategy.redirect()
         var self = this;
@@ -45,7 +45,7 @@ vows.describe('SinglyStrategy').addBatch({
         strategy.authenticate(mockRequest);
       },
 
-      'does not set authorization param': function(err, location) {
+      'does not set authorization param': function (err, location) {
         var params = url.parse(location, true).query;
 
         assert.isUndefined(params.display);
@@ -54,15 +54,15 @@ vows.describe('SinglyStrategy').addBatch({
   },
 
   'strategy when loading user profile': {
-    topic: function() {
+    topic: function () {
       var strategy = new SinglyStrategy({
         clientID: 'ABC123',
         clientSecret: 'secret'
       },
-      function() {});
+      function () {});
 
       // mock
-      strategy._oauth2.getProtectedResource = function(url, accessToken, callback) {
+      strategy._oauth2.getProtectedResource = function (url, accessToken, callback) {
         var body = '{"id":"b680d5b0551d6368851295e8ab276818","name":"Beau Gunderson","url":"http:\\/\\/www.beaugunderson.com\\/","email":"beau\\u0040beaugunderson.com"}';
 
         callback(null, body, undefined);
@@ -72,7 +72,7 @@ vows.describe('SinglyStrategy').addBatch({
     },
 
     'when told to load user profile': {
-      topic: function(strategy) {
+      topic: function (strategy) {
         var self = this;
         function done(err, profile) {
           self.callback(err, profile);
@@ -83,10 +83,12 @@ vows.describe('SinglyStrategy').addBatch({
         });
       },
 
-      'should not error' : function(err, req) {
+      'should not error' : function (err, req) {
         assert.isNull(err);
+        assert.isNotNull(req);
       },
-      'should load profile' : function(err, profile) {
+
+      'should load profile' : function (err, profile) {
         assert.equal(profile.provider, 'singly');
         assert.equal(profile.id, 'b680d5b0551d6368851295e8ab276818');
         assert.equal(profile.username, 'b680d5b0551d6368851295e8ab276818');
@@ -95,25 +97,28 @@ vows.describe('SinglyStrategy').addBatch({
         assert.lengthOf(profile.emails, 1);
         assert.equal(profile.emails[0].value, 'beau@beaugunderson.com');
       },
-      'should set raw property' : function(err, profile) {
+
+      'should set raw property' : function (err, profile) {
         assert.isString(profile._raw);
       },
-      'should set json property' : function(err, profile) {
+
+      'should set json property' : function (err, profile) {
         assert.isObject(profile._json);
       }
     }
   },
 
   'strategy when loading user profile and encountering an error': {
-    topic: function() {
+    topic: function () {
       var strategy = new SinglyStrategy({
         clientID: 'ABC123',
         clientSecret: 'secret'
       },
-      function() {});
+      function () {});
 
       // mock
-      strategy._oauth2.getProtectedResource = function(url, accessToken, callback) {
+      strategy._oauth2.getProtectedResource = function (url, accessToken,
+        callback) {
         callback(new Error('something-went-wrong'));
       };
 
@@ -121,8 +126,9 @@ vows.describe('SinglyStrategy').addBatch({
     },
 
     'when told to load user profile': {
-      topic: function(strategy) {
+      topic: function (strategy) {
         var self = this;
+
         function done(err, profile) {
           self.callback(err, profile);
         }
@@ -132,13 +138,17 @@ vows.describe('SinglyStrategy').addBatch({
         });
       },
 
-      'should error' : function(err, req) {
+      'should error' : function (err, req) {
         assert.isNotNull(err);
+        assert.isNotNull(req);
       },
-      'should wrap error in InternalOAuthError' : function(err, req) {
+
+      'should wrap error in InternalOAuthError' : function (err, req) {
         assert.equal(err.constructor.name, 'InternalOAuthError');
+        assert.isNotNull(req);
       },
-      'should not load profile' : function(err, profile) {
+
+      'should not load profile' : function (err, profile) {
         assert.isUndefined(profile);
       }
     }
