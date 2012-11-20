@@ -1,6 +1,6 @@
 {
   "name": "passport-singly",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Singly authentication strategy for Passport.",
   "author": {
     "name": "Beau Gunderson",
