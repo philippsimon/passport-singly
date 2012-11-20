@@ -1,7 +1,7 @@
 # Passport-Singly
 
-[Passport](http://passportjs.org/) strategy for authenticating with [Singly](http://www.singly.com/)
-using the OAuth 2.0 API.
+[Passport](http://passportjs.org/) strategy for authenticating with
+[Singly](http://www.singly.com/) using the OAuth 2.0 API.
 
 This module lets you authenticate using Singly in your Node.js applications.
 By plugging into Passport, Singly authentication can be easily and
@@ -40,31 +40,27 @@ Use `passport.authenticate()`, specifying the `'singly'` strategy, to
 authenticate requests.
 
 For example, as route middleware in an [Express](http://expressjs.com/)
-application:
+application (not that the ordering of these two routes is important):
+
+    app.get('/auth/singly/callback', passport.authenticate('singly', {
+      failureRedirect: '/login',
+      successReturnToOrRedirect: '/'
+    }));
 
     app.get('/auth/singly/:service', passport.authenticate('singly'));
-
-    app.get('/auth/singly/callback',
-      passport.authenticate('singly', { failureRedirect: '/login' }),
-      function(req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('/');
-      });
 
 #### Extended Permissions
 
 If you need extended permissions from the user, the permissions can be requested
 via the `scope` option to `passport.authenticate()`.
 
-For example, this authorization requests permission to the user's statuses and
-checkins:
+For example, this authorization specifies Facebook as the service and requests
+permission to the user's statuses and checkins:
 
-    app.get('/auth/singly',
-      passport.authenticate('singly', { scope: ['user_status', 'user_checkins'] }),
-      function(req, res){
-        // The request will be redirected to Singly for authentication, with
-        // extended permissions.
-      });
+    app.get('/auth/singly', passport.authenticate('singly', {
+      service: 'facebook',
+      scope: ['user_status', 'user_checkins']
+    }));
 
 ## Examples
 
